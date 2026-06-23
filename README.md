@@ -10,19 +10,26 @@ The system uses a highly decoupled, real-time architecture:
 
 ```mermaid
 graph TD
-    Client[Qwik Frontend] -->|1. Audio Chunks (WebM)| API(/api/transcribe)
-    API -->|2. Buffer| Ollama[Ollama Local AI]
-    Ollama -->|3. Whisper Transcript| API
-    API -->|4. Store| DB[(SQLite / In-Memory)]
-    API -->|5. SSE Event| SSEStream(/api/stream)
-    SSEStream -.->|6. Live Transcript| Client
+    Client[Qwik Frontend]
+    API["API<br/>(/api/transcribe)"]
+    Ollama[Ollama Local AI]
+    DB[(SQLite<br/>In-Memory)]
+    SSEStream["SSE Stream<br/>(/api/stream)"]
+    Analyze["Analyze<br/>(/api/analyze)"]
     
-    Client -->|7. Trigger Analysis| Analyze(/api/analyze)
+    Client -->|1. Audio Chunks<br/>WebM| API
+    API -->|2. Buffer| Ollama
+    Ollama -->|3. Whisper<br/>Transcript| API
+    API -->|4. Store| DB
+    API -->|5. SSE Event| SSEStream
+    SSEStream -.->|6. Live<br/>Transcript| Client
+    
+    Client -->|7. Trigger<br/>Analysis| Analyze
     Analyze -->|8. Full Text| Ollama
-    Ollama -->|9. Llama 3.2 JSON| Analyze
+    Ollama -->|9. Llama 3.2<br/>JSON| Analyze
     Analyze -->|10. Store| DB
     Analyze -->|11. SSE Event| SSEStream
-    SSEStream -.->|12. Live Insights| Client
+    SSEStream -.->|12. Live<br/>Insights| Client
 ```
 
 ## ✨ Key Features
